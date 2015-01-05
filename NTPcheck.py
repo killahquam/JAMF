@@ -21,8 +21,8 @@ c = t.split(":")
 result = c[1]
 
 if result in applied_patch:
-    Status =  "NTP patched: %s"%result
+    Status =  "Yes"
 else:
-    Status = "NTP not patched:%s"%osvers
-
+    Status = "No:OS is %s"%osvers
+    
 print "<result>%s</result>" %Status
