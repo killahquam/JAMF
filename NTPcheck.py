@@ -25,7 +25,7 @@ else:
      if result in applied_patch:
         Status =  "Yes"
      else:
-          Status = "Error"
+          Status = "No"
     
     
 print "<result>%s</result>" %Status
