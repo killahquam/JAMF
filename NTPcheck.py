@@ -12,17 +12,20 @@ osvers = platform.mac_ver()[0]
 #The NTP fix is only available for the following OSX versions
 Needed_vers = ["10.10.1", "10.9.5", "10.8.5"]
 
-if osvers in Needed_vers:
-    check = subprocess.check_output(["what", "/usr/sbin/ntpd"])
-o = check.strip()
-p = o.split()
-t = p[2]
-c = t.split(":")
-result = c[1]
+if not osvers in Needed_vers:
+       Status = "No:OS is %s"%osvers
+else:       
+     check = subprocess.check_output(["what", "/usr/sbin/ntpd"])  
+     o = check.strip()
+     p = o.split()
+     t = p[2]
+     c = t.split(":")
+     result = c[1]
 
-if result in applied_patch:
-    Status =  "Yes"
-else:
-    Status = "No:OS is %s"%osvers
+     if result in applied_patch:
+        Status =  "Yes"
+     else:
+          print "Error"
+    
     
 print "<result>%s</result>" %Status
