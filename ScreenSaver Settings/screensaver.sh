@@ -20,7 +20,7 @@ ask_Delay=0 #0 = As soon as the screensaver is applied
 if [[ "$user_settings_one" == "$ask_password" && "$user_settings_two" == "$ask_Delay" ]]; then
     echo "<result>Secure</result>"
 else
-    echo "<result>Unsecure</result>"
+    echo "<result>Insecure</result>"
 fi
 
 exit 0
