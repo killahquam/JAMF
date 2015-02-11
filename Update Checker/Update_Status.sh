@@ -1,0 +1,25 @@
+#!/bin/bash
+#Script to verify the status of Auto Updates
+#to ensure Critical and Security updates are applied
+#By Quam Sodji Copyright 2015
+
+### Check for schedule, critical and config settings
+schedule_status=$(softwareupdate --schedule)
+critical_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall)
+config_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall)
+
+### The expected settings for schedule, critical and config
+schedule_on="Automatic check is on"
+critical_on="1"
+config_on="1"
+
+
+if [ "$schedule_status" == "$schedule_on" ] && [ "$critical_status" == "$critical_on" ] && [ "$config_status" == "$config_on" ]; then
+
+    result="Yes"
+else
+    result="No"
+fi
+
+echo "<result>$result</result>"
+
