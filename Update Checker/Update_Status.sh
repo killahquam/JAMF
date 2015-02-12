@@ -7,6 +7,7 @@
 schedule_status=$(softwareupdate --schedule)
 critical_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall)
 config_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall)
+run_config=$(softwareupdate --background-critical)
 
 ### The expected settings for schedule, critical and config
 schedule_on="Automatic check is on"
@@ -16,9 +17,9 @@ config_on="1"
 
 if [ "$schedule_status" == "$schedule_on" ] && [ "$critical_status" == "$critical_on" ] && [ "$config_status" == "$config_on" ]; then
 
-    result="Yes"
+    result="Enabled"
 else
-    result="No"
+    result="Disabled"
 fi
 
 echo "<result>$result</result>"
