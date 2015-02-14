@@ -29,7 +29,10 @@ PROMPT_MESSAGE="Please restart your Mac to complete the process.
 You can restart now or your Mac will be restarted automatically in "$SCHEDULE"."
 PROMPT_MESSAGE_TWO="Please restart your Mac now to complete the update process!"
 #################  END #######################
+<<<<<<< HEAD
 WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
+=======
+>>>>>>> FETCH_HEAD
 # Display a COMPANY branded prompt.
 reply=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE" -heading "$PROMPT_HEADING"\
 		-description "$PROMPT_MESSAGE" -button1 "Now" -defaultButton 1 -button2 "Later")
