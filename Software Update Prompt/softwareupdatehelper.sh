@@ -19,6 +19,7 @@ if [ "$TIME" == 1 ];then
 else
 	TIMESTAMP="hours"
 fi
+
 SCHEDULE="$TIME $TIMESTAMP"
 JAMFHELPER="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper"
 LOGO="/private/tmp/COMPANY.icns"
@@ -27,9 +28,9 @@ PROMPT_HEADING="Updates have been installed on your Mac"
 PROMPT_MESSAGE="Please restart your Mac to complete the process.
 You can restart now or your Mac will be restarted automatically in "$SCHEDULE"."
 PROMPT_MESSAGE_TWO="Please restart your Mac now to complete the update process!"
-WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
 #################  END #######################
-# Display a COMPANY branded prompt explaining the password prompt.
+WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
+# Display a COMPANY branded prompt.
 reply=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE" -heading "$PROMPT_HEADING"\
 		-description "$PROMPT_MESSAGE" -button1 "Now" -defaultButton 1 -button2 "Later")
 
