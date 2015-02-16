@@ -5,8 +5,8 @@
 
 ### Check for schedule, critical and config settings
 schedule_status=$(softwareupdate --schedule)
-critical_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall)
-config_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall)
+critical_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall 2>/dev/null)
+config_status=$(defaults read /Library/Preferences/com.apple.SoftwareUpdate ConfigDataInstall 2>/dev/null)
 run_config=$(softwareupdate --background-critical)
 
 ### The expected settings for schedule, critical and config
