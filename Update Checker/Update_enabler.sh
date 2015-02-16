@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #Enable updates
 #Enable critical updates
 #Quam Sodji Copyright 2015
