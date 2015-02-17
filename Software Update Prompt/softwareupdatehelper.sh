@@ -25,14 +25,14 @@ JAMFHELPER="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/
 LOGO="/private/tmp/COMPANY.icns"
 TITLE="COMPANY IT Client Management"
 PROMPT_HEADING="Updates have been installed on your Mac"
-PROMPT_MESSAGE="Please restart your Mac to complete the process.
+PROMPT_MESSAGE="Please save your work and restart to complete the process.
 You can restart now or your Mac will be restarted automatically in "$SCHEDULE"."
-PROMPT_MESSAGE_TWO="Please restart your Mac now to complete the update process!"
+PROMPT_MESSAGE_TWO="Please save your work and restart now to complete the update process!"
 #################  END #######################
 WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
 # Display a COMPANY branded prompt.
 reply=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE" -heading "$PROMPT_HEADING"\
-		-description "$PROMPT_MESSAGE" -button1 "Now" -defaultButton 1 -button2 "Later")
+		-description "$PROMPT_MESSAGE" -alignDescription natural -button1 "Now" -defaultButton 1 -button2 "Later")
 
 if [ "$reply" == 0 ];then
 	echo "Rebooting......"
