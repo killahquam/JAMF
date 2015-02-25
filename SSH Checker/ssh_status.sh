@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #Reports back the status of SSH Remote Login via  Attribute
-#Quam Sodji
+#Quam Sodji 2015
 
 ssh_chk=`systemsetup -getremotelogin`
 ssh_conf="/etc/sshd_config"
