@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 #Reports back the status of SSH Remote Login via  Attribute
 #Quam Sodji
 
