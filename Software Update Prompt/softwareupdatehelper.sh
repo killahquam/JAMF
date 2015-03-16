@@ -12,13 +12,16 @@
 userName=$(/usr/bin/stat -f%Su /dev/console)
 
 ## CUSTOMIZABLE SETTINGS  ####################
+
 TIME=4 #in Hours
 
+##############################################
 if [ "$TIME" == 1 ];then
 	TIMESTAMP="hour"
 else
 	TIMESTAMP="hours"
 fi
+##############################################
 
 SCHEDULE="$TIME $TIMESTAMP"
 JAMFHELPER="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper"
@@ -28,25 +31,42 @@ PROMPT_HEADING="Updates have been installed on your Mac"
 PROMPT_MESSAGE="Please save your work and restart to complete the process.
 You can restart now or your Mac will be restarted automatically in "$SCHEDULE"."
 PROMPT_MESSAGE_TWO="Please save your work and restart now to complete the update process!"
+
 #################  END #######################
-WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
-# Display a COMPANY branded prompt.
-reply=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE" -heading "$PROMPT_HEADING"\
-		-description "$PROMPT_MESSAGE" -alignDescription natural -button1 "Now" -defaultButton 1 -button2 "Later")
 
-if [ "$reply" == 0 ];then
-	echo "Rebooting......"
-	reboot=$(shutdown -r now)
+######## Check if there are still updates available ######
 
+UPDATES=$((softwareupdate -l) 2>&1 > /dev/null)
+
+if [[ -n "$UPDATES" ]];then
+	echo "We are all good"
+	echo $UPDATES
+	jamf recon
+	exit 0
 else
-	echo "$userName chose to reboot later"
-	sleep $WAIT  
-	
-	reply1=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE"\
-		-description "$PROMPT_MESSAGE_TWO" -button1 "Now" -defaultButton 1)
+	echo "Found updates to install...."
+	softwareupdate -l
+	INSTALL=$(softwareupdate -i -a)
+	jamf recon
+	WAIT=$(($TIME * 3600)) #Based on the time entered, the counter will be set in seconds
+	# Display a COMPANY branded prompt.
+	reply=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE" -heading "$PROMPT_HEADING"\
+			-description "$PROMPT_MESSAGE" -alignDescription natural -button1 "Now" -defaultButton 1 -button2 "Later")
 
-	if [ "$reply1" == 0 ];then
+	if [ "$reply" == 0 ];then
 		echo "Rebooting......"
-		reboot=$(shutdown -r now)
+		shutdown -r now
+
+	else
+		echo "$userName chose to reboot later"
+		sleep $WAIT  
+	
+		reply1=$("$JAMFHELPER" -windowType utility -lockHUD -icon "$LOGO" -title "$TITLE"\
+			-description "$PROMPT_MESSAGE_TWO" -button1 "Now" -defaultButton 1)
+
+		if [ "$reply1" == 0 ];then
+			echo "Rebooting......"
+			shutdown -r now
+		fi
 	fi
 fi
