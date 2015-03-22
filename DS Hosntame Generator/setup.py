@@ -7,23 +7,25 @@ import shutil
 
 """Configure the pieces for hostname generator"""
 #### Modifiable fields ###########
-DS_repo_path = '/Users/killah/Desktop/scripts/'
 
+DS_repo_path = 'Full path to DS Repo'
 
 ############### Paths ###############
 
 Biplist_url = 'https://bitbucket.org/wooster/biplist'
-Repo_file = DS_repo_path + 'Files/'
-Temp_folder = DS_repo_path + 'Modules/tmp/'
-Module_folder = DS_repo_path + 'Modules/'
-Biplist_folder = DS_repo_path + 'Modules/biplist/'
-source_file = DS_repo_path + 'Modules/tmp/biplist/biplist/__init__.py'
-removal_temp = DS_repo_path + 'Modules/tmp/biplist/'
-word_file = DS_repo_path + 'Files/words.txt'
+Repo_file = DS_repo_path + '/Files/'
+Temp_folder = DS_repo_path + '/Modules/tmp/'
+Module_folder = DS_repo_path + '/Modules/'
+Biplist_folder = DS_repo_path + '/Modules/biplist/'
+source_file = DS_repo_path + '/Modules/tmp/biplist/biplist/__init__.py'
+removal_temp = DS_repo_path + '/Modules/tmp/biplist/'
+word_file = DS_repo_path + '/Files/words.txt'
 word_List = '/usr/share/dict/words'
+hostname_file = 'hostname_generator.py'
+relative_path = os.path.dirname(os.path.realpath(__file__))
+script_path = DS_repo_path + '/Scripts/'
 
 #######################################
-
 if os.path.isdir(Repo_file):
     print "Files exists...Skipping"
     pass
@@ -71,5 +73,9 @@ print "Moving biplist to Modules"
 file_copy = shutil.copy(source_file,Biplist_folder)
 print "Done"
 empty_temp = shutil.rmtree(removal_temp)
+
+print "Moving hostname_generator to DS_Repo Scripts Folder"
+moving_script = shutil.copyfile(relative_path + '/' + hostname_file, script_path + hostname_file)
+
 print "Cleaning up... Done"
 print "All done, off you go!"
