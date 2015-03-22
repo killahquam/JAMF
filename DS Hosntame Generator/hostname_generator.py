@@ -1,5 +1,5 @@
 #!usr/bin/python
-
+# Original code was written by Tim Sutton
 import subprocess
 import imp
 import os
