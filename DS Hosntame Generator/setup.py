@@ -77,5 +77,8 @@ empty_temp = shutil.rmtree(removal_temp)
 print "Moving hostname_generator to DS_Repo Scripts Folder"
 moving_script = shutil.copyfile(relative_path + '/' + hostname_file, script_path + hostname_file)
 
+print "Changing Permissions on File"
+script_perm = os.chmod(script_path + hostname_file ,511)
+
 print "Cleaning up... Done"
 print "All done, off you go!"
