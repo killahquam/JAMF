@@ -1,5 +1,6 @@
 #!usr/bin/python
 # Quam Sodji Copyright 2015
+#jumpt.wordpress.com
 # Original code was written by Tim Sutton
 # http://macops.ca/interfacing-with-deploystudio-using-http/
 import subprocess
