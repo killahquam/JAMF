@@ -1,5 +1,6 @@
 #setup.py
 #!/usr/bin/python
+#Quam Sodji Copyright 2015
 import subprocess
 import os
 import time
