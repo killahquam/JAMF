@@ -65,7 +65,7 @@ def Computer_serial():
     return serial
 
 def architecture():
-    mac_architecture = subprocess.check_output("uname -p", shell=True)
+    mac_architecture = subprocess.check_output("arch")
     mac_architecture = mac_architecture.strip()
     return mac_architecture
 
@@ -98,8 +98,8 @@ def getHostData():
 def updateHostProperties(machine_id, properties, key_mac_addr=False, create_new=True):
     """Update the computer at machine_id with properties, a dict of properties and
     values we want to set with new values. Return the full addinfourl object or None
-    if we found no computer to update and we aren't creating a new one. Set create_new
-    to True in order to enable creating new entries."""
+    if we found no computer to update and we aren't creating a new one Set create_new
+    to False in order to disable creating new entries."""
     found_comp = getHostData()
     # If we found no computer and we don't want a new record created
     if not found_comp and not create_new:
