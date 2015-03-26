@@ -74,7 +74,7 @@ def hostname_generator():
     current_date = time()
     current_date = str(current_date)
     with open( word_path,'r') as f:
-        words = [w.strip('\n') for w in f if len(w) == 10]
+        words = [w.strip('\n') for w in f if len(w) == 9]
     guess = random.choice(words)
     guess = guess.lower()
     new_name = location + current_date + guess
