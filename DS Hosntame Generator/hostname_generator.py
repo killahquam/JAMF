@@ -8,7 +8,12 @@ import imp
 import os
 import urllib2
 import random
-import datetime
+import sys
+import socket
+import struct
+import time
+import calendar
+
 global location, current_date, mount, machine_id, word_path
 
 ########  Deploystudio Credentials #####################
@@ -38,14 +43,35 @@ def setupAuth():
     opener = urllib2.build_opener(auth_handler)
     urllib2.install_opener(opener)
 
-## Get the current date
-def time():
-    today = datetime.date.today()
-    today = str(today)
-    today = today.split("-")
-    today = "".join(today)
-    today = today[2:-2]
-    today = int(today)
+## Get the month and day from NTP instead of the mac
+def getNTPTime(ntp_host = "time.apple.com"):
+    port = 123
+    buf = 1024
+    address = (ntp_host,port)
+    msg = '\x1b' + 47 * '\0'
+
+    # reference time (in seconds since 1900-01-01 00:00:00)
+    TIME1970 = 2208988800L # 1970-01-01 00:00:00
+
+    # connect to server
+    client = socket.socket( socket.AF_INET, socket.SOCK_DGRAM)
+    client.sendto(msg, address)
+    msg, address = client.recvfrom( buf )
+
+    t = struct.unpack( "!12I", msg )[10]
+    t -= TIME1970
+    g = time.ctime(t).replace("  "," ")
+    
+    year = g[-2:]
+    month = g[4:7]
+    a = {v: k for k,v in enumerate(calendar.month_abbr)}
+    num = a[month]
+    if num < 10:
+            num = str(0) + str(num)
+    else:
+         num = str(num)
+
+    today = year + num
     return today
 
 ## Campus location based on Mac's IP Address
@@ -71,8 +97,7 @@ def architecture():
 
 def hostname_generator():
     location = network()
-    current_date = time()
-    current_date = str(current_date)
+    current_date = getNTPTime()
     with open( word_path,'r') as f:
         words = [w.strip('\n') for w in f if len(w) == 9]
     guess = random.choice(words)
