@@ -15,19 +15,16 @@ try:
     sophos_version = sophos_version[1:]
     sophos_version = sophos_version[:-3]
     if sophos_version == version_9_0:
-        version_9_dir = os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/")
+        os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/")
         remove_9_0 = subprocess.check_output(["./InstallationDeployer","--remove"])
-        update_casper = subprocess.check_output(["jamf", "recon"])
 
     elif sophos_version == version_9_1:
-         version_9_1_dir = os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/tools/")
+         os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/tools/")
          remove_9_1 = subprocess.check_output(["./InstallationDeployer","--remove"])
-         update_casper = subprocess.check_output(["jamf", "recon"])
 
     elif sophos_version == version_9_2:
-        version_9_2_dir = os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/tools/")
+        os.chdir("/Library/Application Support/Sophos/opm/Installer.app/Contents/MacOS/tools/")
         remove_9_2 = subprocess.check_output(["./InstallationDeployer","--remove"])
-        update_casper = subprocess.check_output(["jamf", "recon"])
     else:
         print "Found some other version of Sophos labeled : %s" %sophos_version
 except:

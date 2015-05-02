@@ -1,6 +1,6 @@
 #!usr/bin/python
 # Quam Sodji Copyright 2015
-#jumpt.wordpress.com
+# https://jumpt.wordpress.com
 # Original code was written by Tim Sutton
 # http://macops.ca/interfacing-with-deploystudio-using-http/
 import subprocess
@@ -8,31 +8,59 @@ import imp
 import os
 import urllib2
 import random
-import sys
 import socket
 import struct
 import time
 import calendar
-
-global location, current_date, mount, machine_id, word_path
-
+global machine_id, host
 ########  Deploystudio Credentials #####################
 
-host = 'Deploystudio Url'
-adminuser = 'Deploystudio_username'
-adminpass = 'Deploystudio_password'
+host_nyc = 'http://deploystudio_url1'
+host_sfo = 'http://deploystudio_url2'
+
+adminuser = 'Deploystudio username'
+adminpass = 'Deploystudio password'
 
 ################### Paths ##############################
 
 word_path = "/tmp/DSNetworkRepository/Files/words.txt"
 mount = "/tmp/DSNetworkRepository/Modules/tmp/"
 biplist_path = "/tmp/DSNetworkRepository/Modules/biplist/__init__.py"
-
+ 
 ##########################################################
 
 biplist = imp.load_source('biplist',biplist_path)
 
+## Get Computer serial number
+def Computer_serial():
+    serial = subprocess.check_output("system_profiler SPHardwareDataType | awk '/'Serial'/{print $4}'", shell=True)
+    serial = serial.strip()
+    return serial
+
+## Campus location based on Mac's IP Address
+## If you don't need this option, Comment it out and edit hostname_generator()
+## You can change the segment by changing '172' to whater string you would like to find
+def network():
+    interface = subprocess.check_output("ifconfig | awk ' /'172'/{print $2}'", shell=True)
+    interface = interface[4:6]
+    if interface == '30':# 30 Assuming IP is 172.30.XX.XX
+        return 'nyc'
+    elif interface == '29':# 29 Assuming IP is 172.29.XX.XX
+        return 'sfo'
+
+#Returns the site location for DS
+def DS_Location():
+    location = network()
+    if location == 'nyc':
+        return host_nyc
+    elif location == 'sfo':
+        return host_sfo
+
+host =  DS_Location()
+machine_id = Computer_serial()
+
 def setupAuth():
+    #hostd = DS_Location()
     """Install an HTTP Basic Authorization header globally so it's used for
     every request."""
     auth_handler = urllib2.HTTPBasicAuthHandler()
@@ -43,7 +71,7 @@ def setupAuth():
     opener = urllib2.build_opener(auth_handler)
     urllib2.install_opener(opener)
 
-## Get the month and day from NTP instead of the mac
+## Get the current date
 def getNTPTime(ntp_host = "time.apple.com"):
     port = 123
     buf = 1024
@@ -74,22 +102,6 @@ def getNTPTime(ntp_host = "time.apple.com"):
     today = year + num
     return today
 
-## Campus location based on Mac's IP Address
-## If you don't need this option, Comment it out and edit hostname_generator()
-## You can change the segment by changing '172' to whater string you would like to find
-def network():
-    interface = subprocess.check_output("ifconfig | awk ' /'172'/{print $2}'", shell=True)
-    interface = interface[4:6]
-    if interface == '30':
-        return 'nyc'
-    elif interface == '29':
-         return 'sfo'
-
-def Computer_serial():
-    serial = subprocess.check_output("system_profiler SPHardwareDataType | awk '/'Serial'/{print $4}'", shell=True)
-    serial = serial.strip()
-    return serial
-
 def architecture():
     mac_architecture = subprocess.check_output("arch")
     mac_architecture = mac_architecture.strip()
@@ -105,11 +117,9 @@ def hostname_generator():
     new_name = location + current_date + guess
     return new_name
 
-machine_id = Computer_serial()
-
 def getHostData():
     """Return the full plist for a computer entry"""
-    machine_data = urllib2.urlopen(host + '/computers/get/entry?id=%s' % machine_id)
+    machine_data = urllib2.urlopen(host + "/computers/get/entry?id=%s" % machine_id)
     temp_name = mount + machine_id + ".txt"
     file_name = open(temp_name,'w')
     file_name.write(machine_data.read())
@@ -123,8 +133,9 @@ def getHostData():
 def updateHostProperties(machine_id, properties, key_mac_addr=False, create_new=True):
     """Update the computer at machine_id with properties, a dict of properties and
     values we want to set with new values. Return the full addinfourl object or None
-    if we found no computer to update and we aren't creating a new one Set create_new
-    to False in order to disable creating new entries."""
+    if we found no computer to update and we aren't creating a new one. Set create_new
+    to True in order to enable creating new entries."""
+    
     found_comp = getHostData()
     # If we found no computer and we don't want a new record created
     if not found_comp and not create_new:
