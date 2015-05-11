@@ -1,8 +1,9 @@
 #!/usr/bin/python
 #Quam Sodji 2015
 #Script for cleaning up JSS of empty users (users not associated with a computer)
-#Script is using python-jss to access the JSS via the REST API
+#Script is using python-jss to access the JSS via the REST API and Kn/Slack 
 #https://pypi.python.org/pypi/python-jss/0.5.9
+#https://github.com/kn/slack
 #Load script onto JSS and setup with a once a week cron job
 
 import jss
