@@ -9,13 +9,18 @@ import jss
 import xml.etree.cElementTree as ET
 import sys
 import smtplib
+import slack
+import slack.chat
 
-######### SMTP SETTINGS #######
+######### EMAIL SETTINGS #######
 
 sender = 'from email goes here'
 receivers = ['send to emails go here'] #You can have multiple emails
+smtp_server = smtplib.SMTP('smtp server url','smtp port') #smtp server & port
 
-smtpObj = smtplib.SMTP('smtp server url','smtp port') #smtp server & port
+######### SLACK SETTINGS #######
+slack.api_token = 'slack-token'
+slack_channel = ['slack channel'] #Supports multiple channels
 
 ####################################
 ## JSS URL, USERNAME & PASSWORD ##
@@ -23,9 +28,24 @@ smtpObj = smtplib.SMTP('smtp server url','smtp port') #smtp server & port
 gree_jss = jss.JSS(
     url='https://your_jss_url:8443',
     user='jss_username',
-    password='jss_password')
+    password='jss_password')    #JSS account should be read Only on Computers,
+                                #Mobile Device and Read 7 Delete on Users
 
 #######################################
+
+def email_me(): #Send email
+    try:
+        smtp_server.sendmail(sender, receivers, message)
+        print "Email was sent successfully"
+    except smtplib.SMTPException:
+       print "Error: unable to send email"
+
+def slack_me(): #use Slack
+    for channel in slack_channel:
+        slack.chat.post_message(channel, message, username='CASPER_BOT')
+
+#############################################
+
 qualifier = []
 id_to_remove = []
 jss_names = []
@@ -70,8 +90,11 @@ else:
 #Send email with removed users list
     removed_names = '\n'.join(removed_names)
     message = "Removed Users:\n %s"%removed_names
-try:
-    smtpObj.sendmail(sender, receivers, message)
-    print "Email was sent successfully"
-except SMTPException:
-   print "Error: unable to send email"
+
+    #email_me() #Uncomment for email
+    #slack_me() #Uncomment for slack
+
+    #You can uncomment both if you want both
+
+
+
