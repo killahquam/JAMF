@@ -7,7 +7,6 @@
 #Load script onto JSS and setup with a once a week cron job
 
 import jss
-import xml.etree.cElementTree as ET
 import sys
 import smtplib
 import slack
@@ -43,7 +42,7 @@ def email_me(): #Send email
 
 def slack_me(): #use Slack
     for channel in slack_channel:
-        slack.chat.post_message(channel, message, username='CASPER_BOT')
+        slack.chat.post_message(channel, message, username='casper')
 
 #############################################
 
@@ -64,18 +63,14 @@ for username in qualifier:
 
 #Find the users who do not have a computer assigned to them
 for ind in jss_names:
-    w = []
-    boy = gree_jss.User(ind)
-    tree = ET.ElementTree(boy)
-    root = tree.getroot()
-    for child in root.iter():
-         w.append({child.tag:child.text})
-    if len(w) < 21:
-        id_to_remove.append(root[0].text)
+    struct = gree_jss.User(ind)
+    try:
+        a = struct.find('links/computers/computer/name').text
+        pass
+    except AttributeError:
+        id_to_remove.append(ind)
         full_name = ind.replace("."," ")
         removed_names.append(full_name)
-    else:
-        pass
 
 #Remove found users from the JSS        
 if id_to_remove == []:
